@@ -1571,7 +1571,9 @@ undo_redo_paste (EEditorPage *editor_page,
 				NULL);
 
 			e_editor_dom_selection_restore (editor_page);
-		} else {
+		} else if (event->after.start.x == event->after.end.x &&
+		           event->after.start.y == event->after.end.y) {
+			/* Selection was collapsed after the event */
 			WebKitDOMDOMWindow *dom_window = NULL;
 			WebKitDOMDOMSelection *dom_selection = NULL;
 			WebKitDOMElement *element, *tmp;
@@ -1620,6 +1622,12 @@ undo_redo_paste (EEditorPage *editor_page,
 			e_editor_dom_exec_command (editor_page, E_CONTENT_EDITOR_COMMAND_DELETE, NULL);
 
 			e_editor_dom_force_spell_check_for_current_paragraph (editor_page);
+		} else {
+			restore_selection_to_history_event_state (editor_page, event->after);
+
+			e_editor_dom_exec_command (editor_page, E_CONTENT_EDITOR_COMMAND_DELETE, NULL);
+
+			e_editor_dom_force_spell_check_for_current_paragraph (editor_page);
 		}
 	} else {
 		restore_selection_to_history_event_state (editor_page, event->before);
@@ -1633,6 +1641,8 @@ undo_redo_paste (EEditorPage *editor_page,
 		else
 			e_editor_dom_convert_and_insert_html_into_selection (editor_page, event->data.string.to, FALSE);
 			/* e_editor_selection_insert_as_text (selection, event->data.string.to); */
+
+		restore_selection_to_history_event_state (editor_page, event->after);
 	}
 }
 
