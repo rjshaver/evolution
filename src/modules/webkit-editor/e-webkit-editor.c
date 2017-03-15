@@ -1788,8 +1788,7 @@ webkit_editor_insert_content (EContentEditor *editor,
 		}
 
 		if (strstr (content, "data-evo-draft") && !(wk_editor->priv->html_mode)) {
-			if (content && *content)
-				set_convert_in_situ (wk_editor, TRUE);
+			set_convert_in_situ (wk_editor, TRUE);
 			wk_editor->priv->reload_in_progress = TRUE;
 			webkit_web_view_load_html (WEBKIT_WEB_VIEW (wk_editor), content, "file://");
 			return;
@@ -1806,8 +1805,7 @@ webkit_editor_insert_content (EContentEditor *editor,
 					return;
 				}
 			}
-			if (content && *content)
-				set_convert_in_situ (wk_editor, TRUE);
+			set_convert_in_situ (wk_editor, TRUE);
 		}
 
 		wk_editor->priv->reload_in_progress = TRUE;
